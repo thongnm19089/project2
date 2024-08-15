@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nitroz Dashboard</title>
+    <link rel="shortcut icon" href="{% static 'media/banner/brand/fav.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "admin_assests/css/tailwind.output.css" %}" />   
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script src="{% static "admin_assests/js/init-alpine.js" %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
+    <script src="{% static "admin_assests/js/charts-lines.js" %}" defer></script>
+    <script src="{% static "admin_assests/js/charts-pie.js" %}" defer></script>
+    
+  </head>
+  <body>
+    <div
+      class="flex h-screen bg-gray-50 dark:bg-gray-900"
+      :class="{ 'overflow-hidden': isSideMenuOpen }">
+      <!-- Desktop sidebar -->
+      {% include "admin/side_nav.html" %}
+      <!-- Mobile sidebar -->
+      <!-- Backdrop -->
+      {% include "admin/side_nav_mobile.html" %}
+      <!-- end Mobile sidebar -->
+
+      <div class="flex flex-col flex-1 w-full">
+        {% include "admin/nav.html" %}
+
+        <!-- start main content -->
+        {% block content %}
+        {% endblock content %}
+        <!-- end main content -->
+
+      </div>
+    </div>
+    <script>
+      // Lấy tham chiếu đến phần tử thông báo
+    var notification = document.getElementById('messages');
+
+    // Đặt opacity ban đầu là 1
+    notification.style.opacity = 1;
+
+    // Tính toán số lần lặp để đạt được opacity 0 trong 5 giây (1000ms * 5 = 5000ms)
+    var numIntervals = 70;
+    var intervalDuration = 100;
+
+    // Tính toán sự thay đổi của opacity trong mỗi lần lặp
+    var opacityChange = 1 / numIntervals;
+
+    // Thiết lập interval để thay đổi opacity mỗi intervalDuration ms
+    var fadeEffect = setInterval(function () {
+        // Nếu opacity đã đạt đến 0, dừng interval và ẩn phần tử
+        if (notification.style.opacity <= 0) {
+            clearInterval(fadeEffect);
+            notification.style.display = 'none';
+        } else {
+            // Giảm opacity đi opacityChange trong mỗi lần lặp
+            notification.style.opacity -= opacityChange;
+        }
+    }, intervalDuration); // intervalDuration ms
+    </script>
+  </body>
+</html>

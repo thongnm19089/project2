@@ -1,0 +1,49 @@
+<div class="chatbot-container">
+    <button class="chatbot-toggler">
+      <span class="material-symbols-rounded"><i class="fa fa-plus" aria-hidden="true"></i></span>
+      <span class="material-symbols-outlined"><i class="fa fa-times" aria-hidden="true"></i></span>
+    </button>
+    <div class="chatbot">
+      <header>
+        <h2>Nitroz Chatbot</h2>
+        <span class="close-btn material-symbols-outlined">close</span>
+      </header>
+      <ul class="chatbox" id="chatbot">
+        <li class="chat incoming">
+            <span class="material-symbols-outlined"><i class="fa fa-flickr" aria-hidden="true"></i></span>
+            <p>Hi there 👋<br>How can I help you today?</p>
+        </li>
+      </ul>
+      <div class="chat-input" id="userInput">
+        <input placeholder="Enter a message..." spellcheck="false" required name="userMessage", id="textInput"></input>
+        <button type="submit" id="buttonInput"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+      </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    const chatbotToggler = document.querySelector(".chatbot-toggler");
+    const closeBtn = document.querySelector(".close-btn");
+    const chatbox = document.querySelector(".chatbox");
+    const chatInput = document.querySelector(".chat-input textarea");
+    const sendChatBtn = document.querySelector(".chat-input span");
+
+    closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
+    chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+</script>
+<script>
+    function getUserResponse(){
+        var userText = $('#textInput').val();
+        var userHTML = "<li class='chat outgoing'><p>"+userText+"</p></li>";
+        $('#textInput').val("");
+        $('#chatbot').append(userHTML);
+        $.get('/getResponse',{userMessage:userText}).done(function(data){
+            var returnedMessage = "<li class='chat incoming'><span class='material-symbols-outlined'><i class='fa fa-flickr' aria-hidden='true'></i></span><p>"+data+"</p></li>"
+            $('#chatbot').append(returnedMessage);
+
+        });      
+    }
+    $('#buttonInput').click(function(){
+        getUserResponse();
+    })
+</script>

@@ -1,0 +1,205 @@
+{% extends "main/main.html" %}
+{% load static %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb"
+    style="background-image: url({% static 'media/banner/common-banner.jpg' %});">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first" style="max-width: 500px">
+                <h1>{{product.name}}</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Shop</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!-- Start Product Area -->
+<div class="product_image_area">
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-6">
+                <div class="s_Product_carousel" style="background: linear-gradient(to bottom right, #f89b29, #ff0f7b);">
+                    <div class="single-prd-item" >
+                        <img class="img-fluid" src="{{product.ImageURL}}" alt="{{product.name}}">
+                    </div>
+                    <div class="single-prd-item">
+                        <img class="img-fluid" src="{{product.ImageURL}}" alt="{{product.name}}">
+                    </div>
+                    <div class="single-prd-item">
+                        <img class="img-fluid" src="{{product.ImageURL}}" alt="{{product.name}}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    <h3>{{product.name}}</h3>
+                    {% if product.is_sale %}
+                    <h2>${{product.sale_price}}</h2>
+                    {% else %}
+                    <h2>${{product.price_sell}}</h2>
+                    {% endif %}
+                    <ul class="list">
+                        <li><a class="active" href="#"><span>Category</span> : {{product.cat.name}}</a></li>
+                        <li><a class="active" href="#"><span>Brand</span> : {{product.suppiler}}</a></li>
+                        {% if product.quantity > 0 %}
+                        <li><a href="#"><span>Availibility</span> : In Stock</a></li>
+                        {% else %}
+                        <li><a href="#"><span>Availibility</span> : Out of stock</a></li>
+                        {% endif %}
+                    </ul>
+                    <p>{{product.description | truncatechars:200}}</p>
+                    <div class="product_count">
+                        <label for="qty">Quantity:</label>
+                        <input type="text" name="qty" id="qty-cart" maxlength="12" title="Quantity:" class="input-text qty" value="1" oninput="
+                            var maxValue = parseInt('{{product.quantity}}');
+                            var inputValue = parseInt(this.value);
+                            if (inputValue > maxValue) {
+                                this.value = maxValue;
+                            } else if (inputValue < 1) {
+                                this.value = 1;
+                            }
+                        ">
+                        <button
+                            onclick="var result = document.getElementById('qty-cart'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst < {{product.quantity}}) result.value++;return false;"
+                            class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                        <button
+                            onclick="var result = document.getElementById('qty-cart'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;"
+                            class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></i></button>
+                    </div>
+                    {% if product.quantity > 0 %}
+                    <div class="card_area d-flex align-items-center">
+                        <button class="primary-btn" type="button" value="{{product.id}}" id="add-cart"
+                            style="border: none;">Add to Cart</button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Product Area -->
+<!-- Start Review Area -->
+<section class="product_description_area">
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="true">Description</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab"
+                    aria-controls="review" aria-selected="false">Reviews</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <p>{{product.description}}</p>
+            </div>
+            <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row total_rate">
+                            <div class="col-12">
+                                <div class="box_total">
+                                    <h5>Overall</h5>
+                                    <h4>{{overall_score|floatformat:1}}</h4>
+                                    <h6>({{product_review_len}} Reviews)</h6>
+                                </div>
+                            </div>
+                            <div class="col-6">
+
+                            </div>
+                        </div>
+                        <div class="review_list">
+                            {% for review in product_reviews %}
+                            <div class="review_item" style="position: relative;">
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="{{review.user.ImageURL}}" alt="hung"
+                                            style="height: 40px; width: 40px;">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>{{review.user.username}}</h4>
+                                        <h5>{{review.created|timesince}}</h5>
+                                        {% if review.rating > 0 %}
+                                            <i class="fa fa-star{% if review.rating  < 1 %}-o{% else %}  {% endif %} " id="check-star"></i>
+                                            <i class="fa fa-star{% if review.rating  < 2 %}-o{% else %}  {% endif %} " id="check-star"></i>
+                                            <i class="fa fa-star{% if review.rating  < 3 %}-o{% else %}  {% endif %} " id="check-star"></i>
+                                            <i class="fa fa-star{% if review.rating  < 4 %}-o{% else %}  {% endif %} " id="check-star"></i>
+                                            <i class="fa fa-star{% if review.rating  < 5 %}-o{% else %}  {% endif %} " id="check-star"></i>
+                                        {% else %}
+                                            <i class="fa fa-star-o " id="star"></i>
+                                            <i class="fa fa-star-o" id="star"></i>
+                                            <i class="fa fa-star-o" id="star"></i>
+                                            <i class="fa fa-star-o" id="star"></i>
+                                            <i class="fa fa-star-o" id="star"></i>
+                                        {% endif %}
+                                        {% if request.user == review.user %}
+                                        <a href="{% url 'delete-review' review.id %}" 
+                                        style="position: absolute;top: 20%;right: 10px;cursor: pointer;">
+                                        <i class="fa fa-trash" aria-hidden="true"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <p>{{review.body}}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="review_box">
+                            <h4>Add a Review</h4>
+
+
+                            <form class="row contact_form" method="POST" id="contactForm" novalidate="novalidate">
+                                {% csrf_token %}
+                                <div style="padding: 0 15px;">
+                                    <p style="margin-right: 10px;">Your Rating</p>
+                                    <div class="rating">
+
+                                        <input type="radio" id="star5" name="rating" value="5" />
+                                        <label class="star" for="star5" title="Awesome" aria-hidden="true"></label>
+                                        <input type="radio" id="star4" name="rating" value="4" />
+                                        <label class="star" for="star4" title="Great" aria-hidden="true"></label>
+                                        <input type="radio" id="star3" name="rating" value="3" />
+                                        <label class="star" for="star3" title="Very good" aria-hidden="true"></label>
+                                        <input type="radio" id="star2" name="rating" value="2" />
+                                        <label class="star" for="star2" title="Good" aria-hidden="true"></label>
+                                        <input type="radio" id="star1" name="rating" value="1" />
+                                        <label class="star" for="star1" title="Bad" aria-hidden="true"></label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="body" id="message" rows="1"
+                                            placeholder="Review" onfocus="this.placeholder = ''"
+                                            onblur="this.placeholder = 'Review'"></textarea></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" value="submit" class="primary-btn">Submit Now</button>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Review Area -->
+<!-- Start related-product Area -->
+{% include 'base/main/sale_prods.html' %}
+<!-- End related-product Area -->
+<!-- Start brand Area -->
+{% include 'base/main/brands.html' %}
+<!-- End brand Area -->
+{% endblock content %}

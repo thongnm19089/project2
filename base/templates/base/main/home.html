@@ -1,0 +1,164 @@
+{% extends "main/main.html" %}
+{% load static %}
+{% block content %}
+
+<!-- start banner Area -->
+<section class="banner-area">
+        <div class="container">
+                <div class="row fullscreen align-items-center justify-content-start">
+                        <div class="col-lg-12">
+                                <div class="active-banner-slider owl-carousel">
+                                        <!-- single-slide -->
+                                        {% for product in banner_prods %}
+                                        <div class="row single-slide align-items-center d-flex">
+                                                <div class="col-lg-5 col-md-6">
+                                                        <div class="banner-content">
+                                                                <h1>Yonex Shoe Collection</h1>
+                                                                <h2>{{product.name}}</h2>
+                                                                <p>{{product.description|truncatechars:200}}</p>
+                                                                <div class="add-bag d-flex align-items-center">
+                                                                        <a class="add-btn" href="{% url "product" product.id %}"><span class="lnr lnr-cross"></span></a>
+                                                                        <span class="add-text text-uppercase">View More</span>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                        <div class="banner-img">
+                                                                <img class="img-fluid" src="{{product.ImageURL}}" alt="">
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        {% endfor %}
+                                </div>
+                        </div>
+                </div>
+        </div>
+</section>
+<!-- End banner Area -->
+<!-- start product Area -->
+<section class="section_gap" style="padding-top: 50px;">
+        <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                        <div class="section-title" id="product">
+                                <h1>Latest Products</h1>
+                                <div class="pagination justify-content-center">
+                                        {% if page.has_previous %}
+                                        <a href="{% url 'home' %}?page={{ page.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="prev-arrow"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+                                        {% endif %}
+                                        {% for num_page in page.paginator.page_range %}
+                                                {% if num_page == 1 or num_page == page.paginator.num_pages or num_page == page.number or num_page == page.number|add:"-1" or num_page == page.number|add:"-2" or num_page == page.number|add:"1" or num_page == page.number|add:"2" %}
+                                                        {% if page.number == num_page %}
+                                                                <a href="{% url 'home' %}?page={{ num_page }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="active">{{ num_page }}</a>
+                                                        {% else %}
+                                                                <a href="{% url 'home' %}?page={{ num_page }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num_page }}</a>
+                                                        {% endif %}
+                                                {% elif num_page == page.paginator.num_pages|add:"-1" or num_page == 2 %}
+                                                        <a href="#" class="dot-dot"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                {% endif %}
+                                        {% endfor %}
+                                        {% if page.has_next %}
+                                        <a href="{% url 'home' %}?page={{ page.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="next-arrow"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                                        {% endif %}
+                                </div>
+                        </div>
+                </div>
+        </div>
+        <!-- single product slide -->
+        <div class="single-product-slider">
+                <div class="container">
+                        <div class="row">
+                                {% for product in page.object_list %}
+                                <!-- single product -->
+                                <div class="col-lg-3 col-md-6">
+                                        <div class="single-product" style="position: relative;">
+                                                <div class="product-image" style="position: relative; overflow: hidden;">
+                                                        <div style="background: linear-gradient(to bottom right, #0172AF, #74FEBD);">
+                                                        <a href="{% url 'product' product.id %}"><img class="img-fluid" src="{{product.ImageURL}}" alt=""
+                                                                style="display: block; width: 100% ; height: auto;" /></a></div>
+                                                        {% if product.sale_price != 0.00 %}
+                                                        <div class="sale-tag">
+                                                                <h6 style="position: absolute; top: 10px; right: 10px; background-color: #ff0000; color: #ffff; font-size: 14px; padding: 5px 10px; border-radius: 3px; z-index: 1; text-transform: uppercase;">sale</h6>
+                                                        </div>
+                                                        {% endif %}
+                                                </div>
+                                                <div class="product-details">
+                                                        <h6>{{product.name}}</h6>
+                                                        <div class="price">
+                                                                {% if product.sale_price != 0.00 %}
+                                                                <h6>${{product.sale_price}}</h6>
+                                                                <h6 class="l-through">${{product.price_sell}}</h6>
+                                                                {% else %}
+                                                                <h6>${{product.price_sell}}</h6>
+                                                                {% endif %}
+                                                        </div>
+                                                        <div class="prd-bottom">
+                                                                <a href="{% url 'product' product.id %}" class="social-info">
+                                                                        <span class="lnr lnr-move"></span>
+                                                                        <p class="hover-text">view more</p>
+                                                                </a>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                                {% endfor %}
+
+                        </div>
+                </div>
+        </div>
+</section>
+<!-- End product Area -->
+<!-- start features Area -->
+<section class="features-area section_gap" style="padding-top: 0;">
+        <div class="container">
+                <div class="row features-inner">
+                        <!-- single features -->
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="single-features">
+                                        <div class="f-icon">
+                                                <img src="static/media/features/f-icon1.png" alt="">
+                                        </div>
+                                        <h6>Free Delivery</h6>
+                                        <p>Free Shipping on all order</p>
+                                </div>
+                        </div>
+                        <!-- single features -->
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="single-features">
+                                        <div class="f-icon">
+                                                <img src="static/media/features/f-icon2.png" alt="">
+                                        </div>
+                                        <h6>Return Policy</h6>
+                                        <p>Free Shipping on all order</p>
+                                </div>
+                        </div>
+                        <!-- single features -->
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="single-features">
+                                        <div class="f-icon">
+                                                <img src="static/media/features/f-icon3.png" alt="">
+                                        </div>
+                                        <h6>24/7 Support</h6>
+                                        <p>Free Shipping on all order</p>
+                                </div>
+                        </div>
+                        <!-- single features -->
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="single-features">
+                                        <div class="f-icon">
+                                                <img src="static/media/features/f-icon4.png" alt="">
+                                        </div>
+                                        <h6>Secure Payment</h6>
+                                        <p>Free Shipping on all order</p>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</section>
+<!-- end features Area -->
+<!-- Start related-product Area -->
+{% include 'base/main/sale_prods.html' %}
+<!-- End related-product Area -->
+<!-- Start brand Area -->
+{% include 'base/main/brands.html' %}
+<!-- End brand Area -->       
+{% endblock content %}

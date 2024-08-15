@@ -1,0 +1,132 @@
+{% extends "main/main.html" %}
+{% load static %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb"
+    style="background-image: url({% static 'media/banner/common-banner.jpg' %});">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first" style="max-width: 500px">
+                <h1>Shopping cart</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url "cart" %}">Shopping cart</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!-- Start cart Area -->
+{% if cart_products %}
+<section class="cart_area">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="table-responsive">
+                
+                <table class="table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Update</th>
+                            <th scope="col">Remove</th>
+                            <th scope="col" style="text-align:center;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in cart_products %}
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="{{product.ImageURL}}" alt="hung" style="width:100px;height:100px">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>{{product.name}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <h5>
+                                    {% if product.is_sale %}
+                                    ${{product.sale_price|floatformat:2}}
+                                    {% else %}
+                                    ${{product.price_sell|floatformat:2}}
+                                    {% endif %}
+                                    
+                                </h5>
+                            </td>
+                            <td>
+                                <div class="product_count">
+                                    {% for key, value in quantities.items %}
+                                    {% if key == product.id|slugify %}
+                                    <input type="text" name="qty" id="select{{product.id}}" maxlength="12" title="Quantity:" class="input-text qty" value="{{value}}" oninput="
+                                        var maxValue = {{product.quantity}};
+                                        if (parseInt(this.value) > maxValue) {
+                                            this.value = maxValue;
+                                        }
+                                    ">
+                                    {% endif %}
+                                    {% endfor %}
+                                    <button onclick="var result = document.getElementById('select{{product.id}}'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst < {{product.quantity}}) result.value++;return false;" class="increase items-count" type="button"><i class="fa fa-chevron-circle-up"></i></button>
+                                    <button onclick="var result = document.getElementById('select{{product.id}}'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;" class="reduced items-count" type="button"><i class="fa fa-chevron-circle-down"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
+                            </td>
+                            <td>
+                                <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-cart-item">Delete</button>
+                            </td>
+                            <td style="text-align:center;">
+                                <h5>{% for key,value in item_total.items %}
+                                    {% if key == product.id|stringformat:"s" %}
+                                        <span>${{value}}</span>
+                                    {% endif %}
+                                {% endfor %}</h5>
+                            </td>
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <h5>Subtotal :</h5>
+                            </td>
+                            <td style="text-align:center;">
+                                <h5>${{totals}}</h5>
+                            </td>
+                        </tr>
+                        <tr class="out_button_area">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="3">
+                                <div class="checkout_btn_inner d-flex align-items-center">
+                                    <a class="gray_btn" href="{% url 'home' %}">Continue Shopping</a>
+                                    <a class="primary-btn" href="{% url "checkout" %}">Proceed to checkout</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+    <h3 class="title_confirmation" style="color: #ffb900; margin: 10% 0; text-align:center;">Your shopping cart is empty. <i class="fa fa-frown-o fa-lg" aria-hidden="true"></i></h3>
+    {% endif %}
+<!-- End cart Area -->
+<!-- Start related-product Area -->
+{% include 'base/main/sale_prods.html' %}
+<!-- End related-product Area -->
+<!-- Start brand Area -->
+{% include 'base/main/brands.html' %}
+<!-- End brand Area -->
+{% endblock content %}

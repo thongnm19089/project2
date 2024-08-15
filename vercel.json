@@ -1,0 +1,13 @@
+{
+    "builds": [{
+        "src": "WEB_BAN_HANG/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "WEB_BAN_HANG/wsgi.py"
+        }
+    ]
+}

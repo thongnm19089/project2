@@ -1,0 +1,251 @@
+{% extends "admin/main.html" %}
+{% load humanize %}
+{% block content %}
+<main class="h-full overflow-y-auto">
+    <div class="container px-6 mx-auto grid">
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Dashboard</h2>
+        <!-- Cards -->
+        <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+            <!-- Card -->
+            <a href="{% url "customerAdmin" %}">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <div
+                        class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                            Total clients
+                        </p>
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                            {{customers|length}}
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <!-- Card -->
+            <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Revenue</p>
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        $ {{ revenue|intcomma }}</p>
+                </div>
+            </div>
+            <!-- Card -->
+            <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                        </path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        New sales</p>
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        {{sales|length}}</p>
+                </div>
+            </div>
+            <!-- Card -->
+            <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Pending orders</p>
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        {{orders|length}}</p>
+                </div>
+            </div>
+            <!-- Card -->
+            <a href="{% url "invoiceAdmin" %}">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                    <div class="p-3 mr-4 text-green-500 bg-blue-100 rounded-full dark:text-green-100 dark:bg-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                            Pending Invoices</p>
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                            {{invoices|length}}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Charts -->
+        <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+            Charts
+        </h2>
+        <div class="grid gap-6 mb-8 md:grid-cols-2">
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                    Product Quantities
+                </h4>
+                <div style="position: relative; width:20vw; height: 20vw; width:100%; display: flex; justify-content: center; align-items: center;">
+                <canvas id="pie-chart"></canvas>
+                </div>
+            </div>
+
+
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="position: relative; ">
+                <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                    Revenue/Supplier
+                </h4>
+                <div style="position: relative; width:20vw; height: 20vw; width:100%; display: flex; justify-content: center; align-items: center;">
+                <canvas id="bar-chart" height="100" width="200"></canvas>
+                </div>
+            </div>
+
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800" style="position: relative; ">
+                <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                    Monthly Revenue of {{selected_year}}
+                </h4>
+                <form method="post" style="display: flex;">
+                    {% csrf_token %}
+                    <select style="width:200px;" name="year" id="year" class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                        <option value="">----</option>
+                    </select>
+                    <input type="hidden" name="selected_year" id="selected_year">
+                    <button style="margin: 0 20px;" type="submit" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      Filter
+                    </button>
+                </form>
+                <div style="position: relative; width:20vw; height: 20vw; width:100%; display: flex; justify-content: center; align-items: center;">
+                <canvas id="bar-chart2" height="100" width="200"></canvas>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('pie-chart');
+    const ctx1 = document.getElementById('bar-chart');
+    const ctx2 = document.getElementById('bar-chart2');
+    // pie chart
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{labels|safe}},
+            datasets: [{
+                label: "Amount",
+                data: {{data|safe}},
+                backgroundColor: [
+                    '#55efc4', '#fab1a0', '#6c5ce7', '#ffeaa7'
+                ],
+                
+            }]
+        },
+        options: {
+            borderWidth:5,
+            cutout: '50%',
+            borderRadius:2,
+            hoverBorderWidth:0,
+            responsive: true,
+            plugins: {
+                legend:{
+                    display: false,
+                }
+            }, // You can set this to false
+        }
+    });
+    //bar chart
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: {{labels|safe}},
+            datasets: [{
+                label: "$USD",
+                data: {{data1_int|safe}},
+                backgroundColor: [
+                    '#55efc4', '#fab1a0', '#6c5ce7', '#ffeaa7'
+                ],
+            }]
+        },
+        options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            },
+            plugins: {
+                legend:{
+                    display: false,
+                }
+            },
+        }
+    });
+
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: "$USD",
+                data: {{data2_values|safe}},
+                backgroundColor: [
+                    '#55efc4', '#81ecec', '#74b9ff', '#a29bfe', 
+                    '#ffeaa7','#fab1a0','#ff7675','#fd79a8',
+                    '#636e72','#273c75','#dcdde1','#4cd137'
+                ],
+                
+            }]
+        },
+        options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            },
+            plugins: {
+                legend:{
+                    display: false,
+                }
+            },
+        }
+    });
+</script>
+<script>
+    const yearSelect = document.getElementById('year');
+    const selectedYearInput = document.getElementById('selected_year');
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    
+    // Generate options for the past 3 years (inclusive)
+    for (let i = currentYear - 3; i <= currentYear; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      yearSelect.appendChild(option);
+    }
+    yearSelect.value = ""; 
+    selectedYearInput.value = currentYear;
+    yearSelect.addEventListener('change', function() {
+      const selectedValue = this.value;
+      selectedYearInput.value = selectedValue;
+    });
+    </script>
+{% endblock content %}

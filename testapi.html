@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+</head>
+
+<body>
+    <h1>Test API</h1>
+    <div id="products-container">
+
+    </div>
+</body>
+<script>
+    let productContainer = document.getElementById('products-container');
+    let getProducts = async () => {
+        let response = await fetch('http://127.0.0.1:8000/api/products/')
+        let products = await response.json()
+
+        for (let i = 0; products.length > i; i++) {
+            let product = products[i]
+            let row = `<div>
+                <h3>${product.name}<h3>
+                <div>`
+
+            productContainer.innerHTML += row
+        }
+    }
+    getProducts()
+</script>
+
+
+</html>

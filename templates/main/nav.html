@@ -1,0 +1,113 @@
+{% load static %}
+<header class="header_area sticky-header">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light main_box">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="{% url 'home' %}"><img src="{% static "media/banner/brand/logo.png" %}"
+                        alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li class="nav-item" id="messages"
+                            style="display: flex; justify-content: center; align-items: center; background-color: #ffb900; padding: 5px; text-transform: uppercase; border-radius: 9px; color: #222222;">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">Brands</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link"
+                                    href="{% url 'home' %}">All</a></li>
+                                {% for suppiler in suppilers %}
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{% url 'home' %}?q={{suppiler.name}}">{{suppiler.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">Categories</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link"
+                                    href="{% url 'home' %}">All</a></li>
+                                {% for cat in cats %}
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{% url 'home' %}?q={{cat.name}}">{{cat.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item"
+                            style="display: flex; justify-content: center; align-items: center; background-color: #ffb900; padding: 5px; text-transform: uppercase; border-radius: 9px; color: #222222;">
+                            Hello: @{{request.user.username}}</li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item">
+                            <a href="{% url 'cart' %}" class="cart">
+                                <span class="fa fa-shopping-bag fa-lg"></span>
+                                <span class="badge" id="cart_quantity"
+                                    style="display: inline-block; padding: 0.25em 0.5em; border-radius: 50%; background-color: red; color: white; font-size: 12px;line-height: 1;">{{cart|length}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="search"><span class="fa fa-search fa-lg" id="search"></span></button>
+                        </li>
+                        <li class="nav-item submenu dropdown"
+                            style="display: flex; justify-content: center; align-items: center;">
+                            <!-- <a href="#" class="cart"><span class="fa fa-user fa-lg"></span></a> -->
+                            <a href="#" class="cart nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">
+                            {% if request.user.is_authenticated %}
+                                <img src="{{request.user.avatar.url}}"
+                                    style="border-radius: 50%; width: 40px; height: 40px; align-items: center;"></a>
+                            {% else %}
+                            <img src="{% static "media/users/avatar.svg" %}"
+                                style="border-radius: 50%; width: 40px; height: 40px; align-items: center;"></a>
+                            {% endif %}
+                            <ul class="dropdown-menu" style="margin-top:-33px; margin-left:-50px; min-width: 137px;">
+
+                                <li class="nav-item"></li>
+                                {% if request.user.is_authenticated %}
+                                    {% if request.user.is_staff %}
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'adminHome' %}">Admin</a></li>
+                                    {% endif %}
+                                <li class="nav-item"><a class="nav-link"
+                                        href="{% url 'user-profile' request.user.id %}">Profile</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                                {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">login</a></li>
+                                {% endif %}
+
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="search_input" id="search_input_box">
+        <div class="container">
+            <form class="d-flex justify-content-between">
+                <input type="text" class="form-control" id="search_input" name="q" placeholder="Search Here">
+                <button type="submit" class="btn"></button>
+                <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+            </form>
+        </div>
+    </div>
+</header>

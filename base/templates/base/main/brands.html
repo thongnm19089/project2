@@ -1,0 +1,12 @@
+{% load static %}
+<section class="brand-area section_gap section_gap_bottom">
+    <div class="container">
+            <div class="row">
+                {% for logo in logoes %}
+                    <a class="col single-img" href="#">
+                            <img class="img-fluid d-block mx-auto" src="{{logo.ImageURL}}" alt="">
+                    </a>
+                {% endfor %}
+            </div>
+    </div>
+</section>

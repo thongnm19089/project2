@@ -1,0 +1,141 @@
+{% extends "main/main.html" %}
+{% load static %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Checkout</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url 'checkout' %}">Checkout</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<!--================Checkout Area =================-->
+<section class="checkout_area section_gap">
+    <div class="container">
+        <div class="billing_details">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Billing Details</h3>
+                    <form class="row contact_form" id="form" action="#" method="post" novalidate="novalidate">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        {% if field.name == 'first_name' %}
+                        <div class="col-md-6 form-group p_star">
+                            {{field}}
+                        </div>
+                        {% elif field.name == 'last_name' %}
+                        <div class="col-md-6 form-group p_star">
+                            {{field}}
+                        </div>
+                        {% else %}
+                        <div class="col-md-12 form-group p_star">
+                            {{field}}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account">
+                                <h3>Shipping Details</h3>
+                            </div>
+                            <textarea class="form-control" name="message" id="message" rows="1"
+                                placeholder="Order Notes"></textarea>
+                        </div>
+                        <button type="submit" id="form-button" class="primary-btn submit_btn"
+                            style="border: none; margin: 15px;">Submit</button>
+                    </form>
+                </div>
+                <div class="col-lg-4">
+                    <div class="order_box">
+                        <h2>Your Order</h2>
+                        <ul class="list">
+                            <li><a href="#">Product <span>Total</span></a></li>
+                            <li>
+                                {% for product in cart_products %}
+                                <a href="#">{{product.name|truncatechars:20}}
+                                    {% for key, value in quantities.items %}
+                                    {% if key == product.id|slugify %}
+                                    <span class="middle">x {{value}}</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% for key,value in item_total.items %}
+                                    {% if key == product.id|stringformat:"s" %}
+                                    <span class="last">${{value}}</span>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                </a>{% endfor %}
+                            </li>
+                        </ul>
+                        <ul class="list list_2">
+                            <li><a href="#">Total <span>${{totals}}</span></a></li>
+                        </ul>
+                        <div class="payment_item" id="payment_item">
+                            <p>We accept paying through PayPal !!</p>
+                            <input type="checkbox" id="f-option4" name="selector">
+                            <label for="f-option4">I’ve accept the </label>
+                            <a href="#">terms & conditions*</a>
+                            {% comment %} <a class="primary-btn" href="{% url "createOrder" %}">Proceed
+                                Order</a> {% endcomment %}
+                            <div id="paypal-button-container"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script
+    src="https://www.paypal.com/sdk/js?client-id=AV4WhXqnpNSVLCXqj1cJWVyLUdmrPb-Z1pegREkAF68jeybJ5ZNYjIIxIi9VLJT68ZrtkYrwoOLTDTYv&currency=USD"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    let total = {{ totals }};
+    var quantities = {
+        {% for product_id, quantity in quantities.items %}
+            "{{ product_id }}": {{ quantity }},
+        {% endfor %}
+    };
+    console.log(total)
+    paypal.Buttons({
+        createOrder: function(data,actions){
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: parseFloat(total).toFixed(2)
+                    }
+                }]
+            });
+        },
+        onApprove: function(data,actions){
+            return actions.order.capture().then(function(details){
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "createOrder" %}',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'post',
+                        'quantities': JSON.stringify(quantities)
+                    },
+                    success: function(response){
+                        console.log("Data sent successfully!");
+                        window.location.href = "{% url 'home' %}";
+                    },
+                    error: function(xhr, errmsg, err){
+                        console.log("Error while sending data:", errmsg);
+                    }
+                });
+                alert('Transaction completed by' + details.payer.name.given_name);
+            });
+        }
+    }).render("#paypal-button-container")
+</script>
+<!--================End Checkout Area =================-->
+{% endblock content %}

@@ -1,0 +1,252 @@
+{% extends "main/main.html" %}
+{% load static %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb"
+    style="background-image: url({% static 'media/banner/common-banner.jpg' %});">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first" style="max-width: 500px">
+                <h1 style="text-transform: uppercase;">Hello {{user.username}}</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="{% url "user-profile" request.user.id %}">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!-- Start Blog Area -->
+<section class="blog_area single-post-area section_gap">
+    <div class="container">
+        <div class="row">
+            {% if pageView == 'updateProfile' %}
+            <div class="col-lg-8">
+                <div class="comment-form" style="margin-top: 0%;">
+                    <h4>Edit profile</h4>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form-group">
+                            {{field}}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="primary-btn submit_btn" style="border: none;">Update</button>
+                    </form>
+                    <a href="{% url "updatePassword" %}" class="genric-btn info radius"
+                        style="float: left; margin-top: -10px;">Change your password?</a>
+                </div>
+            </div>
+            {% elif pageView == 'updatePassword' %}
+            <div class="col-lg-8">
+                <div class="comment-form" style="margin-top: 0%;">
+                    <h4>Update Password</h4>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in password_form %}
+                        {% if field.name == 'old_password' %}
+                        <div class="form-group">
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for field in password_form %}
+                        {% if field.name != 'old_password' %}
+                        <div class="form-group">
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <button type="submit" class="primary-btn submit_btn" style="border: none;">Update</button>
+                    </form>
+                    <a href="{{request.META.HTTP_REFERER}}" class="genric-btn info radius"
+                        style="float: left; margin-top: -10px;">Back to Profile</a>
+                </div>
+            </div>
+            {% elif pageView == 'orderDetail' %}
+            <div class="col-lg-8">
+                <div class="comment-form" style="margin-top: 0%;">
+                    <h4>Order #{{order.id}} - Total: ${{order.calculate_total_value}}</h4>
+                    <div class="progress-table-wrap">
+                        <div class="progress-table">
+                            <div class="table-head">
+                                <div class="serial">#</div>
+                                <div class="country">Product</div>
+                                <div class="country">Suppiler</div>
+                                <div class="country">Quantity</div>
+                                <div class="country">Price</div>
+                                <div class="country">Total</div>
+                            </div>
+                            {% for item in items %}
+                            <div class="table-head">
+                                <div class="serial">{{item.id}}</div>
+                                <div class="country">{{item.product.name}}</div>
+                                <div class="country">{{item.product.suppiler}}</div>
+                                <div class="country">{{item.quantity}}</div>
+                                <div class="country">
+                                    {% if item.product.is_sale %}
+                                    ${{item.product.sale_price}}
+                                    {% else %}
+                                    ${{item.product.price_sell}}
+                                    {% endif %}
+                                </div>
+                                <div class="country">${{item.item_total|floatformat:2}}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="col-lg-4">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget author_widget">
+                        <img class="author_img rounded-circle" src="{{user.ImageURL}}" alt=""
+                            style="width: 150px; height: 150px;">
+                        <h4 style="text-transform: capitalize;">{{user.first_name}} {{user.last_name}}</h4>
+                        <p>@{{user.username}}</p>
+                        <a href="#" class="genric-btn primary small">Small</a>
+                        <div class="social_icon">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-github"></i></a>
+                            <a href="#"><i class="fa fa-behance"></i></a>
+                        </div>
+                        <p>Boot camps have its supporters andit sdetractors. Some people do not understand why you
+                            should have to spend money on boot camp when you can get. Boot camps have itssuppor
+                            ters andits detractors.</p>
+                        <div class="br"></div>
+                    </aside>
+                </div>
+            </div>
+
+            <!--================Product Description Area =================-->
+            {% if pageView == 'updateProfile' or pageView == 'orderDetail'%}
+            <section class="product_description_area" style="width: 100%;">
+                <div class="container">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                aria-controls="home" aria-selected="true">Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab"
+                                aria-controls="review" aria-selected="false">Reviews</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="section-top-border">
+                                <div class="progress-table-wrap row">
+                                    <div class="progress-table col-lg-12">
+                                        <div class="table-head">
+                                            <div class="serial">#</div>
+                                            <div class="country">Status</div>
+                                            <div class="country">Created</div>
+                                            <div class="country">Total</div>
+                                            <div class="country">Date</div>
+                                            <div class="country">Action</div>
+                                        </div>
+                                        {% for order in orders %}
+                                        <div class="table-row">
+                                            <div class="serial">{{order.id}}</div>
+                                            <div class="country">
+                                                {% if order.status == 1 %}
+                                                <span style="padding:5px 10px; background:#f1c40f; border-radius:40px; color: white;">Pending<span>
+                                                {% elif order.status == 2 %}
+                                                <span style="padding:5px 10px; background:#3498db; border-radius:40px; color: white;">Processing<span>
+                                                {% elif order.status == 3 %}
+                                                <span style="padding:5px 10px; background:#e74c3c; border-radius:40px; color: white;">Cancel<span>
+                                                {% elif order.status == 4 %}
+                                                <span style="padding:5px 10px; background:#2ecc71; border-radius:40px; color: white;">Delivered<span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="country">{{order.created}}</div>
+                                            <div class="country">${{order.calculate_total_value|floatformat:2}}</div>
+                                            <div class="country">{{order.created}}</div>
+                                            <div class="country">
+                                                <a href="{% url "orderDetailMain" order.id %}"
+                                                    class="genric-btn primary">View</a>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab"
+                            style="min-width:100%">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row total_rate">
+                                        <div class="col-6">
+
+                                        </div>
+                                    </div>
+                                    <div class="review_list">
+
+                                        {% for review in reviews %}
+                                        <div class="review_item">
+                                            <div class="media">
+                                                <div class="d-flex">
+                                                    <img src="{{review.user.ImageURL}}" alt="hung"
+                                                        style="height: 40px; width: 40px;">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4><a
+                                                            href="{% url 'product' review.product.id %}">{{review.product.name}}</a>
+                                                    </h4>
+                                                    <h5>{{review.created|timesince}}</h5>
+                                                    {% if review.rating > 0 %}
+                                                    <i class="fa fa-star {% if review.rating  < 1 %} no-checked {% else %} checked {% endif %} "
+                                                        id="check-star"></i>
+                                                    <i class="fa fa-star {% if review.rating  < 2 %} no-checked {% else %} checked {% endif %} "
+                                                        id="check-star"></i>
+                                                    <i class="fa fa-star {% if review.rating  < 3 %} no-checked {% else %} checked {% endif %} "
+                                                        id="check-star"></i>
+                                                    <i class="fa fa-star {% if review.rating  < 4 %} no-checked {% else %} checked {% endif %} "
+                                                        id="check-star"></i>
+                                                    <i class="fa fa-star {% if review.rating  < 5 %} no-checked {% else %} checked {% endif %} "
+                                                        id="check-star"></i>
+                                                    {% else %}
+                                                    <i class="fa fa-star " id="star"></i>
+                                                    <i class="fa fa-star" id="star"></i>
+                                                    <i class="fa fa-star" id="star"></i>
+                                                    <i class="fa fa-star" id="star"></i>
+                                                    <i class="fa fa-star" id="star"></i>
+                                                    {% endif %}
+                                                    {% if request.user == review.user %}
+                                                    <a href="{% url 'delete-review' review.id %}"
+                                                        style="position: absolute;top: 20%;right: 10px;cursor: pointer;">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <p>{{review.body}}</p>
+                                        </div>
+                                        <hr>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+            <!--================End Product Description Area =================-->
+        </div>
+    </div>
+</section>
+
+<!-- Start related-product Area -->
+{% include 'base/main/sale_prods.html' %}
+<!-- End related-product Area -->
+{% include 'base/main/brands.html' %}
+<!-- End Blog Area -->
+{% endblock content %}

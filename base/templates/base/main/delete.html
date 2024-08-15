@@ -1,0 +1,34 @@
+{% extends "main/main.html" %}
+{% load static %}
+{% block content %}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb"
+    style="background-image: url({% static 'media/banner/common-banner.jpg' %});">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first" style="max-width: 500px">
+                <h1>Confirm delete</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="{% url 'home' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Delete</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<section class="order_details section_gap" style="position: relative; margin-bottom: 50px;">
+    <div class="container">
+        <form class="form" action="" method="POST">
+            {% csrf_token %}
+        <h3 class="title_confirmation" style="color: red;">Are you sure you want to delete this "{{obj}}!!"</h3>
+        <div style="font-size: 16px; position: absolute; left: 50%; transform: translateX(-50%);">
+        <a href="{{request.META.HTTP_REFERER}}" class="genric-btn primary e-large">Cancel</a>
+        <input type="submit" class="genric-btn danger e-large"  value="Confirm">
+        </div>
+        </form>
+    </div>
+</section>
+
+{% endblock content %}
