@@ -1,4 +1,4 @@
-#!/Users/nguyenthong/prj/DO_AN_TN/WEB_BAN_HANG/venv/bin/python3.10
+#!/Users/nguyenthong/prj/prj22/project2/venv/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys
